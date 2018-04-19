@@ -1,4 +1,4 @@
-package com.mm.spider.http
+package com.mm.spider.downloader
 
 import java.net.URL
 import java.net.URLDecoder
@@ -14,7 +14,6 @@ class URLParser {
     var path: String? = null
     var userInfo: String? = null
     var query: String? = null
-    var charSet: String? = null
     var hasDomain: Boolean = true
 
     constructor(url: String) : this(url, "utf-8") {
@@ -30,9 +29,8 @@ class URLParser {
             u = URL(url)
         } else {
             hasDomain = false
-            u = URL("http://dummy" + if (url.startsWith("/")) url else "/$url")
+            u = URL("downloader://dummy" + if (url.startsWith("/")) url else "/$url")
         }
-        this.charSet = charset
         if (hasDomain) {
             this.protocol = u.protocol
             this.host = u.host
@@ -46,7 +44,7 @@ class URLParser {
         this.params = parseQueryString(substringAfter(url, "?"))
     }
 
-    fun createQueryString(): String {
+    fun createQueryString(charset: String): String {
         if (this.params.isEmpty()) {
             return ""
         }
@@ -57,7 +55,7 @@ class URLParser {
                 if (sb.length > 0) {
                     sb.append("&")
                 }
-                sb.append(name).append("=").append(encode(value))
+                sb.append(name).append("=").append(encode(value, charset))
             }
         }
         return sb.toString()
@@ -97,12 +95,12 @@ class URLParser {
         return if (index == -1) "" else str.substring(index + 1)
     }
 
-    private fun decode(value: String) : String {
-        return if (this.charSet == null) value else URLDecoder.decode(value, this.charSet)
+    private fun decode(value: String, charset: String) : String {
+        return URLDecoder.decode(value, charset)
     }
 
-    private fun encode(value: String) : String {
-        return if (this.charSet == null) value else URLEncoder.encode(value, this.charSet)
+    private fun encode(value: String, charset: String) : String {
+        return URLEncoder.encode(value, charset)
     }
 
 }

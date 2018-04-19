@@ -2,8 +2,6 @@ package com.mm.spider.selector
 
 import com.jayway.jsonpath.JsonPath
 import io.vertx.core.json.Json
-import io.vertx.core.json.JsonObject
-import java.awt.SystemColor.text
 
 class JsonPathSelector(var jsonPathStr: String) : Selector {
     var jsonPath: JsonPath

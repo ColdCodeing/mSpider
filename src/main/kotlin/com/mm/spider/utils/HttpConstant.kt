@@ -16,7 +16,7 @@ class HttpConstant {
 
         class StatusCode {
             companion object {
-                val CODE_200 = 200
+                val CODE_200:Int = 200
             }
         }
 

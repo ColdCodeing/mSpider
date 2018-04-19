@@ -2,6 +2,8 @@ package com.mm.spider.selector
 
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
+import java.util.*
 
 class Html : HtmlNode {
     var document: Document
@@ -16,6 +18,10 @@ class Html : HtmlNode {
 
     constructor(document: Document) : super() {
         this.document = document
+    }
+
+    override fun getElement(): List<Element> {
+        return Collections.singletonList(document)
     }
 
     fun selectDocument(selector: Selector): String? {
@@ -36,4 +42,7 @@ class Html : HtmlNode {
         }
     }
 
+    override fun toString(): String {
+        return "Html(document=$document)"
+    }
 }

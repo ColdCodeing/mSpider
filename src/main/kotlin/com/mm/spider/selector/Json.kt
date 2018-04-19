@@ -1,8 +1,5 @@
 package com.mm.spider.selector
 
-import java.awt.SystemColor.text
-
-
 class Json : PlainText {
     constructor(strings: List<String>) : super(strings) {
     }

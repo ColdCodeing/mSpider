@@ -29,16 +29,16 @@ class RegexSelector : Selector {
     }
 
     override fun selectList(html: String): List<String> {
-        val strings = ArrayList<String>()
         val results = selectGroupList(html)
-        for (result in results) {
-            strings.add(result[group])
-        }
+        val strings = ArrayList<String>()
+        results.forEach({
+            it.get(group)?.let { strings.add(it) }
+        })
         return strings
     }
 
-    override fun select(html: String): String {
-        return selectGroup(html)[group]
+    override fun select(html: String): String? {
+        return selectGroup(html).get(group)
     }
 
     fun selectGroup(text: String) : RegexResult {
@@ -56,13 +56,17 @@ class RegexSelector : Selector {
     fun selectGroupList(text: String) : List<RegexResult> {
         val matcher = regex.matcher(text)
         val resultList = ArrayList<RegexResult>()
-        if (matcher.find()) {
-            val groups = Array<String>(matcher.groupCount() - 1, {""})
+        while (matcher.find()) {
+            val groups = Array<String>(matcher.groupCount() + 1, {""})
             for (i in groups.indices) {
                 groups.set(i, matcher.group(i))
             }
             resultList.add(RegexResult(groups))
         }
         return resultList
+    }
+
+    override fun toString(): String {
+        return "RegexSelector(regexStr='$regexStr')"
     }
 }

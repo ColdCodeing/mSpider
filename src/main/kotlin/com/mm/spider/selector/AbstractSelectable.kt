@@ -39,7 +39,9 @@ abstract class AbstractSelectable : Selectable {
     }
 
     fun selectList(selector: Selector, strings: List<String>): Selectable {
-        return PlainText(strings.flatMap { selector.selectList(it) }.toList())
+        return PlainText(strings.flatMap {
+            selector.selectList(it)
+        }.toList())
     }
     override fun select(selector: Selector) : Selectable {
         return select(selector, getSourceTexts())

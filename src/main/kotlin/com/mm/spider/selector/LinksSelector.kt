@@ -1,7 +1,6 @@
 package com.mm.spider.selector
 
 import org.jsoup.nodes.Element
-import org.jsoup.helper.StringUtil.isBlank
 import java.util.ArrayList
 
 

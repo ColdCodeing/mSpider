@@ -32,13 +32,12 @@ open class HtmlNode : AbstractSelectable {
     }
 
     fun selectElements(elementSelector: BaseElementSelector): Selectable {
-        val elementIterator = elements.listIterator()
+        val elementIterator = getElement().listIterator()
         if (!elementSelector.hasAttribute()) {
             val resultElements = ArrayList<Element>()
             while (elementIterator.hasNext()) {
                 val element = checkElementAndConvert(elementIterator as MutableListIterator<Element>)
-                val selectElements = elementSelector.selectElements(element)
-                selectElements.let { resultElements.addAll(it) }
+                resultElements.addAll(elementSelector.selectElements(element))
             }
             return HtmlNode(resultElements)
         } else {
@@ -79,5 +78,9 @@ open class HtmlNode : AbstractSelectable {
             selectables.add(HtmlNode(childElements))
         }
         return selectables
+    }
+
+    open fun getElement(): List<Element> {
+        return this.elements
     }
 }
