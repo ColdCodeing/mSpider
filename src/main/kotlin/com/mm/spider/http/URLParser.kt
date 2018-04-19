@@ -1,4 +1,4 @@
-package com.mm.spider.utils
+package com.mm.spider.http
 
 import java.net.URL
 import java.net.URLDecoder
