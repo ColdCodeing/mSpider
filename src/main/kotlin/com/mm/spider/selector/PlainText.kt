@@ -4,15 +4,15 @@ import kotlin.streams.toList
 
 open class PlainText : AbstractSelectable {
 
-    var sourceText: List<String>
+    override var sourceTexts: List<String>
 
     constructor(sourceTexts: List<String>) {
-        this.sourceText = sourceTexts
+        this.sourceTexts = sourceTexts
     }
 
     constructor(text: String) {
-        this.sourceText = ArrayList()
-        (this.sourceText as MutableList).add(text)
+        this.sourceTexts = ArrayList()
+        (this.sourceTexts as MutableList).add(text)
     }
 
     override fun `$`(selector: String): Selectable {
@@ -28,10 +28,6 @@ open class PlainText : AbstractSelectable {
     }
 
     override fun nodes(): List<Selectable> {
-        return sourceText.stream().map { PlainText(it)}.toList()
-    }
-
-    override fun getSourceTexts(): List<String> {
-        return sourceText
+        return sourceTexts.stream().map { PlainText(it)}.toList()
     }
 }

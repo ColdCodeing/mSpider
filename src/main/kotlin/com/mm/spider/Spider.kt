@@ -1,11 +1,14 @@
 package com.mm.spider
 
+import com.mm.spider.component.Page
+import com.mm.spider.component.Request
 import com.mm.spider.consts.*
 import com.mm.spider.downloader.Downloader
 import com.mm.spider.downloader.VertxDownloader
 import com.mm.spider.pipeline.ConsolePipeline
 import com.mm.spider.pipeline.Pipeline
 import com.mm.spider.processor.PageProcessor
+import com.mm.spider.queue.DefaultQueue
 import com.mm.spider.utils.VertxUtils
 import io.vertx.core.http.HttpMethod
 import kotlinx.coroutines.experimental.delay
@@ -13,17 +16,8 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class Spider : com.mm.spider.component.Spider {
-    var downloader: Downloader? = null
-    var pipelines: List<Pipeline> = ArrayList()
-    var pageProcessor: PageProcessor? = null
-    var requests: Queue<Request> = LinkedList()
-    var sleepTime: Long = 100
-    var openProxy: Boolean = false
-    var spiderStatus: Int = 0
-
+class Spider : com.mm.spider.component.AbstractSpider {
     constructor() {
-
     }
 
     constructor(downloader: Downloader, pipelines: List<Pipeline>, pageProcessor: PageProcessor) {
@@ -33,47 +27,12 @@ class Spider : com.mm.spider.component.Spider {
     }
 
     override fun addUrls(urls: List<String>, httpMethod: HttpMethod?) : Spider {
-        urls.forEach({this.requests.add(Request(it, httpMethod?:HttpMethod.GET))})
+        urls.forEach({this.addRequest(Request(it, httpMethod ?: HttpMethod.GET))})
         return this
     }
 
     override fun addRequests(requests: List<Request>) : Spider {
-        requests.forEach({this.requests.add(it)})
-        return this
-    }
-
-    override fun addRequest(request: Request) : Spider {
-        requests.add(request)
-        return this
-    }
-
-    override fun addUrl(url: String, httpMethod: HttpMethod?) : Spider {
-        this.requests.add(Request(url, httpMethod?:HttpMethod.GET))
-        return this
-    }
-
-    fun addPipeline(pipeline: Pipeline) : Spider {
-        (this.pipelines as MutableList).add(pipeline)
-        return this
-    }
-
-    fun clearPipeline() : Spider{
-        this.pipelines = ArrayList()
-        return this
-    }
-
-    fun addDownloader(downloader: Downloader): Spider {
-        this.downloader = downloader
-        return this
-    }
-
-    fun addPageProcessor(pageProcessor: PageProcessor) : Spider {
-        this.pageProcessor = pageProcessor
-        return this
-    }
-
-    fun openProxy(openProxy: Boolean) : Spider {
-        this.openProxy = openProxy
+        requests.forEach({this.addRequest(it)})
         return this
     }
 
@@ -83,6 +42,9 @@ class Spider : com.mm.spider.component.Spider {
         }
         if (pipelines.isEmpty()) {
             (this.pipelines as MutableList).add(ConsolePipeline())
+        }
+        if (queue == null) {
+            this.queue = DefaultQueue()
         }
         return this
     }
@@ -104,7 +66,7 @@ class Spider : com.mm.spider.component.Spider {
     }
 
     suspend fun running() {
-        val request = this.requests.poll()
+        val request = this.queue?.poll()
         if (request != null) {
             if (this.openProxy) {
                 //get proxy
@@ -129,7 +91,7 @@ class Spider : com.mm.spider.component.Spider {
                 pipelines.forEach({it.process(page.resultItems)})
             }
             this.addRequests(page.targetRequests)
-            println("task queue remain: " + this.requests.size)
+            println("task queue remain: " + this.queue?.getLeftRequests())
         }
         sleep(sleepTime)
     }

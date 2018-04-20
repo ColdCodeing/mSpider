@@ -1,7 +1,7 @@
 package com.mm.spider.downloader
 
-import com.mm.spider.Page
-import com.mm.spider.Request
+import com.mm.spider.component.Page
+import com.mm.spider.component.Request
 import com.mm.spider.selector.Html
 import com.mm.spider.selector.PlainText
 import com.mm.spider.utils.detectCharset
@@ -119,6 +119,7 @@ class VertxDownloader : Downloader {
         options.setKeepAlive(true).setReuseAddress(true).setFollowRedirects(true);
         options.userAgent = request.userAgent?:options.userAgent
         options.proxyOptions = request.proxy?: options.proxyOptions
+        options.setConnectTimeout(10000)
         return options
     }
 }

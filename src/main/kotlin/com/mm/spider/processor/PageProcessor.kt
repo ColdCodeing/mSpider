@@ -1,6 +1,6 @@
 package com.mm.spider.processor
 
-import com.mm.spider.Page
+import com.mm.spider.component.Page
 
 abstract class PageProcessor {
     abstract fun process(page: Page)

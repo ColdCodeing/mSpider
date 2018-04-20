@@ -8,6 +8,6 @@ class Json : PlainText {
     }
 
     override fun jsonPath(jsonPath: String): Selectable {
-        return selectList(JsonPathSelector(jsonPath), sourceText)
+        return selectList(JsonPathSelector(jsonPath), sourceTexts)
     }
 }

@@ -3,7 +3,7 @@ package com.mm.spider.selector
 import java.util.ArrayList
 
 abstract class AbstractSelectable : Selectable {
-    protected abstract fun getSourceTexts() : List<String>
+    abstract var sourceTexts: List<String>
 
     override fun css(selector: String): Selectable {
         return `$`(selector)
@@ -14,15 +14,15 @@ abstract class AbstractSelectable : Selectable {
     }
 
     override fun regex(regex: String): Selectable {
-        return selectList(RegexSelector(regex), getSourceTexts())
+        return selectList(RegexSelector(regex), sourceTexts)
     }
 
     override fun regex(regex: String, group: Int): Selectable {
-        return selectList(RegexSelector(regex, group), getSourceTexts())
+        return selectList(RegexSelector(regex, group), sourceTexts)
     }
 
     override fun replace(regex: String, replacement: String): Selectable {
-        return select(ReplaceSelector(regex, replacement), getSourceTexts())
+        return select(ReplaceSelector(regex, replacement), sourceTexts)
     }
 
 
@@ -44,22 +44,22 @@ abstract class AbstractSelectable : Selectable {
         }.toList())
     }
     override fun select(selector: Selector) : Selectable {
-        return select(selector, getSourceTexts())
+        return select(selector, sourceTexts)
     }
     override fun selectList(selector: Selector) : Selectable {
-        return selectList(selector, getSourceTexts())
+        return selectList(selector, sourceTexts)
     }
 
     override fun get(): String? {
-        if (getSourceTexts().size > 0) {
-            return getSourceTexts().get(0)
+        if (sourceTexts.size > 0) {
+            return sourceTexts.get(0)
         } else {
             return null
         }
     }
 
     override fun all(): List<String> {
-        return getSourceTexts()
+        return sourceTexts
     }
 
     override fun toString(): String {
@@ -67,6 +67,6 @@ abstract class AbstractSelectable : Selectable {
     }
 
     override fun match(): Boolean {
-        return getSourceTexts().size > 0;
+        return sourceTexts.size > 0;
     }
 }

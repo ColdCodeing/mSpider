@@ -29,7 +29,7 @@ class Html : HtmlNode {
             val elementSelector = selector as ElementSelector
             return elementSelector.select(document)
         } else {
-            return selector.select(getSourceTexts().get(0))
+            return selector.select(sourceTexts.get(0))
         }
     }
 
@@ -38,7 +38,7 @@ class Html : HtmlNode {
             val elementSelector = selector as ElementSelector
             return elementSelector.selectList(document)
         } else {
-            return selector.selectList(getSourceTexts().get(0))
+            return selector.selectList(sourceTexts.get(0))
         }
     }
 

@@ -1,6 +1,6 @@
 package com.mm.spider.pipeline
 
-import com.mm.spider.ResultItems
+import com.mm.spider.component.ResultItems
 
 class ConsolePipeline :Pipeline() {
     override fun process(resultItems: ResultItems) {

@@ -1,7 +1,7 @@
 package com.mm.spider.downloader
 
-import com.mm.spider.Page
-import com.mm.spider.Request
+import com.mm.spider.component.Page
+import com.mm.spider.component.Request
 
 abstract class Downloader {
     abstract suspend fun download(request: Request) : Page

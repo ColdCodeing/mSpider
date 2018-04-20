@@ -1,4 +1,4 @@
-package com.mm.spider
+package com.mm.spider.component
 
 import io.vertx.core.MultiMap
 import io.vertx.core.http.HttpMethod

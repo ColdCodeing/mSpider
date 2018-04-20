@@ -1,4 +1,4 @@
-package com.mm.spider
+package com.mm.spider.component
 
 import com.mm.spider.selector.Html
 import com.mm.spider.selector.Json
@@ -31,7 +31,7 @@ class Page {
         }
     }
 
-    fun putField(key: String, value: Any) {
+    fun putField(key: String, value: Any?) {
         resultItems.put(key, value)
     }
 
@@ -39,7 +39,7 @@ class Page {
         requestStrs.forEach({
             if (!(it.isBlank() && it == "#" && it.startsWith("javascript:"))) {
                 var url = canonicalizeUrl(it, url.toString());
-                (targetRequests as MutableList).add(Request(url, httpMethod?:HttpMethod.GET));
+                (targetRequests as MutableList).add(Request(url, httpMethod ?: HttpMethod.GET));
             }
         })
     }
@@ -49,7 +49,7 @@ class Page {
             return
         }
         var url = canonicalizeUrl(requestStr, url.toString())
-        (targetRequests as MutableList).add(Request(url, httpMethod?:HttpMethod.GET));
+        (targetRequests as MutableList).add(Request(url, httpMethod ?: HttpMethod.GET));
     }
 
     fun addTargetRequest(request: Request) {

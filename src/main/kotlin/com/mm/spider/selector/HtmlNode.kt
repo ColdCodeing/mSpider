@@ -8,6 +8,15 @@ import java.util.ArrayList
 
 
 open class HtmlNode : AbstractSelectable {
+    override var sourceTexts: List<String>
+        get() {
+            val sourceTexts = ArrayList<String>(elements.size)
+            for (element in elements) {
+                sourceTexts.add(element.toString())
+            }
+            return sourceTexts
+        }
+        set(value) {}
 
     var elements: List<Element> = ArrayList<Element> ()
 
@@ -56,14 +65,6 @@ open class HtmlNode : AbstractSelectable {
 
     override fun `$`(selector: String, attrname: String): Selectable {
         return selectElements(Selectors.`$`(selector, attrname))
-    }
-
-    override fun getSourceTexts(): List<String> {
-        val sourceTexts = ArrayList<String>(elements.size)
-        for (element in elements) {
-            sourceTexts.add(element.toString())
-        }
-        return sourceTexts
     }
 
     override fun links(): Selectable {

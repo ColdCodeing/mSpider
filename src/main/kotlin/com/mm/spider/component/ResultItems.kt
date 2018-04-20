@@ -1,7 +1,7 @@
-package com.mm.spider;
+package com.mm.spider.component;
 
 class ResultItems {
-    var fields: MutableMap<String, Any> = HashMap()
+    var fields: Map<String, Any> = HashMap()
     var skip: Boolean = false
 
     fun <T> get(key: String) : T? {
@@ -13,7 +13,7 @@ class ResultItems {
     }
 
     fun <T> put(key: String, value: T) {
-        fields.put(key, value!!)
+        (fields as MutableMap).put(key, value!!)
     }
 
     override fun toString(): String {
