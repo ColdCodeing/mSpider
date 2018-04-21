@@ -86,6 +86,7 @@ class VertxDownloader : Downloader {
         var charset = charset
         val page = Page()
         page.bytes = bytes
+        //非二进制需要根据编码转换为html
         if (!request.binaryContent) {
             if (charset == null) {
                 charset = getHtmlCharset(response.getHeader("Content-Type"), bytes)
@@ -105,7 +106,6 @@ class VertxDownloader : Downloader {
         return page
     }
 
-    @Throws(IOException::class)
     private fun getHtmlCharset(contentType: String, contentBytes: ByteArray): String {
         var charset = detectCharset(contentType, contentBytes)
         if (charset == null) {

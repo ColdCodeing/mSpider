@@ -12,7 +12,7 @@ import java.util.*
 class Page {
     lateinit var request: Request
     var resultItems: ResultItems = ResultItems()
-    lateinit var html: Html
+    var html: Html? = null
     var Json: Json? = null
     var rawText: String? = null
     lateinit var url: Selectable

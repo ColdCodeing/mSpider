@@ -3,12 +3,13 @@ package com.mm.spider.queue
 import com.mm.spider.component.Request
 import com.mm.spider.queue.filter.BloomDuplicateFilter
 import com.mm.spider.queue.filter.Filter
+import com.mm.spider.queue.filter.HashDuplicateFilter
 import java.util.*
 
 class DefaultQueue() : Queue() {
 
     override var queue: java.util.Queue<Request> = LinkedList()
-    override var filter: Filter = BloomDuplicateFilter()
+    override var filter: Filter = HashDuplicateFilter()
 
     constructor(queue: java.util.Queue<Request>, filter: Filter) : this() {
         this.queue = queue

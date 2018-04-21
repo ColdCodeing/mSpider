@@ -12,6 +12,7 @@ import java.util.*
 
 abstract class AbstractSpider : CoroutineVerticle() {
 
+    var spiderName: String? = null
     var downloader: Downloader? = null
     var pipelines: List<Pipeline> = ArrayList()
     var pageProcessor: PageProcessor? = null
@@ -19,23 +20,12 @@ abstract class AbstractSpider : CoroutineVerticle() {
     var sleepTime: Long = 100
     var openProxy: Boolean = false
     var spiderStatus: Int = 0
-    var concurrency: Int = 1
 
-    abstract fun addUrls(urls: List<String>, httpMethod: HttpMethod?) : AbstractSpider
-    abstract fun addRequests(requests: List<Request>) : AbstractSpider
     abstract fun run()
     abstract fun pause() : AbstractSpider
-    abstract fun init() : AbstractSpider
-
-    fun setConcurrency(concurrency: Int): AbstractSpider {
-        this.concurrency = concurrency
-        return this
-    }
-
-    fun addRequest(request: Request) : AbstractSpider {
-        queue?.push(request)
-        return this
-    }
+    abstract fun stopped() : AbstractSpider
+    abstract fun restart() : AbstractSpider
+    abstract fun addRequest(request: Request) : AbstractSpider
 
     fun addUrl(url: String, httpMethod: HttpMethod?) : AbstractSpider {
         this.addRequest(Request(url, httpMethod ?: HttpMethod.GET))
@@ -79,5 +69,15 @@ abstract class AbstractSpider : CoroutineVerticle() {
 
     fun isIdel() : Boolean {
         return this.spiderStatus == SPIDER_STATUS_IDEL
+    }
+
+    fun addUrls(urls: List<String>, httpMethod: HttpMethod?) : AbstractSpider {
+        urls.forEach({this.addUrl(it, null)})
+        return this
+    }
+
+    fun addRequests(requests: List<Request>) : AbstractSpider {
+        requests.forEach({ this.addRequest(it) })
+        return this
     }
 }
