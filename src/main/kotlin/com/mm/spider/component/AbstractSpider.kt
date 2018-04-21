@@ -1,14 +1,16 @@
 package com.mm.spider.component
 
 import com.mm.spider.Spider
+import com.mm.spider.consts.SPIDER_STATUS_IDEL
 import com.mm.spider.downloader.Downloader
 import com.mm.spider.pipeline.Pipeline
 import com.mm.spider.processor.PageProcessor
 import com.mm.spider.queue.Queue
 import io.vertx.core.http.HttpMethod
+import io.vertx.kotlin.coroutines.CoroutineVerticle
 import java.util.*
 
-abstract class AbstractSpider {
+abstract class AbstractSpider : CoroutineVerticle() {
 
     var downloader: Downloader? = null
     var pipelines: List<Pipeline> = ArrayList()
@@ -17,13 +19,18 @@ abstract class AbstractSpider {
     var sleepTime: Long = 100
     var openProxy: Boolean = false
     var spiderStatus: Int = 0
+    var concurrency: Int = 1
 
     abstract fun addUrls(urls: List<String>, httpMethod: HttpMethod?) : AbstractSpider
     abstract fun addRequests(requests: List<Request>) : AbstractSpider
+    abstract fun run()
+    abstract fun pause() : AbstractSpider
     abstract fun init() : AbstractSpider
-    abstract suspend fun run()
-    abstract fun stop()
-    abstract fun pause()
+
+    fun setConcurrency(concurrency: Int): AbstractSpider {
+        this.concurrency = concurrency
+        return this
+    }
 
     fun addRequest(request: Request) : AbstractSpider {
         queue?.push(request)
@@ -68,5 +75,9 @@ abstract class AbstractSpider {
     fun sleepTime(time: Long) : AbstractSpider {
         this.sleepTime = time
         return this
+    }
+
+    fun isIdel() : Boolean {
+        return this.spiderStatus == SPIDER_STATUS_IDEL
     }
 }

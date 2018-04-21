@@ -1,19 +1,27 @@
 package com.mm.spider.queue
 
 import com.mm.spider.component.Request
+import com.mm.spider.queue.filter.BloomDuplicateFilter
+import com.mm.spider.queue.filter.Filter
 import java.util.*
-import java.util.Queue
 
-class DefaultQueue : AbstractQueue() {
-    var queue: Queue<Request> = LinkedList()
+class DefaultQueue() : Queue() {
 
-    override fun pushWhenNoDuplicate(request: Request) {
-        if (this.filter.isDuplicate(request)) {
+    override var queue: java.util.Queue<Request> = LinkedList()
+    override var filter: Filter = BloomDuplicateFilter()
+
+    constructor(queue: java.util.Queue<Request>, filter: Filter) : this() {
+        this.queue = queue
+        this.filter = filter
+    }
+
+    fun pushWhenNoDuplicate(request: Request) {
+        if (!this.filter.isDuplicate(request)) {
             queue.offer(request)
         }
     }
 
-    override fun poll(): Request {
+    override fun poll(): Request? {
         return queue.poll()
     }
 
@@ -24,4 +32,9 @@ class DefaultQueue : AbstractQueue() {
     override fun getTotalRequests(): Int {
         return this.filter.getTotalRequestsCount()
     }
+
+    override fun push(request: Request) {
+        pushWhenNoDuplicate(request)
+    }
+
 }

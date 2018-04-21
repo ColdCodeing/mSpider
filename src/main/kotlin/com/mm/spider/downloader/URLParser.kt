@@ -29,7 +29,7 @@ class URLParser {
             u = URL(url)
         } else {
             hasDomain = false
-            u = URL("downloader://dummy" + if (url.startsWith("/")) url else "/$url")
+            u = URL("http://dummy" + if (url.startsWith("/")) url else "/$url")
         }
         if (hasDomain) {
             this.protocol = u.protocol
