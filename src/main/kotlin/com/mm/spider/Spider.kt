@@ -87,7 +87,7 @@ class Spider : com.mm.spider.component.AbstractSpider {
                         nextEvent()
                     }
                     SPIDER_STATUS_IDEL -> {
-                        delay(2000, TimeUnit.SECONDS)   //主动释放执行权2秒钟
+                        delay(500, TimeUnit.MILLISECONDS)   //主动释放执行权0.5s
                         doCrawl()
                         nextEvent()
                     }

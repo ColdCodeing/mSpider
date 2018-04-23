@@ -9,6 +9,7 @@ import com.mm.spider.queue.Queue
 import io.vertx.core.http.HttpMethod
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import java.util.*
+import kotlin.collections.ArrayList
 
 abstract class AbstractSpider : CoroutineVerticle() {
 
@@ -34,6 +35,12 @@ abstract class AbstractSpider : CoroutineVerticle() {
 
     fun addPipeline(pipeline: Pipeline) : AbstractSpider {
         (this.pipelines as MutableList).add(pipeline)
+        return this
+    }
+
+    fun setPipeline(pipeline: Pipeline) : AbstractSpider {
+        clearPipeline()
+        addPipeline(pipeline)
         return this
     }
 

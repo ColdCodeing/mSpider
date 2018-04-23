@@ -2,29 +2,10 @@ package com.mm.spider.processor
 
 import com.mm.spider.component.Page
 import com.mm.spider.component.Request
-import com.mm.spider.utils.VertxUtils
-import com.mm.spider.utils.VertxUtils.Companion.vertx
-import io.vertx.core.Vertx
-import io.vertx.core.buffer.Buffer
 import io.vertx.core.http.HttpMethod
-import javassist.util.proxy.FactoryHelper.writeFile
-import javassist.util.proxy.FactoryHelper.writeFile
 
-
-
-class LuooMusicProcessor : PageProcessor() {
+class LuooMusicPageProcessor : PageProcessor() {
     override fun process(page: Page) {
-        if (page.request.binaryContent) {
-            val imageName = page.request.url.substring(page.request.url.indexOf("!") - 17, page.request.url.indexOf("!"))
-            vertx.fileSystem().createFile("/home/panmin/图片/$imageName", {
-                        vertx.fileSystem().writeFile("/home/panmin/图片/$imageName", Buffer.buffer(page.bytes), { result ->
-                            if (result.succeeded()) {
-                            } else {
-                                System.err.println("Oh oh ..." + result.cause())
-                            }
-                        })
-                    })
-        }
         page.html?.let {
             if (it.css("div.vol-list").match()) {
                 for (i in 0 until 10) {

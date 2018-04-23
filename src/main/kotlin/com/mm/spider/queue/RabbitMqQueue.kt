@@ -21,18 +21,17 @@ class RabbitMqQueue : com.mm.spider.queue.Queue{
     }
 
     override suspend fun push(request: Request) {
-        println(JsonObject(Json.encode(request)))
         awaitResult < Void > {
             rabbitMQClient.basicPublish(this.exchangeName, this.routingKey, JsonObject().put("body", Json.encode(request)), it)
         }
     }
 
     override suspend fun poll(): Request? {
-        val msg = awaitResult<JsonObject> {
+        var msg = awaitResult<JsonObject?> {
             rabbitMQClient.basicGet(this.queueName, true, it)
         }
         var request: Request? = null
-        msg.getString("body")?.let {
+        msg?.getString("body")?.let {
             request = Json.decodeValue(it, Request::class.java)
         }
         return request
