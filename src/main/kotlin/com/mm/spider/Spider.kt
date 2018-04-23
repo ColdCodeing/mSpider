@@ -7,7 +7,6 @@ import com.mm.spider.downloader.Downloader
 import com.mm.spider.downloader.VertxDownloader
 import com.mm.spider.pipeline.ConsolePipeline
 import com.mm.spider.pipeline.Pipeline
-import com.mm.spider.processor.PageProcessor
 import com.mm.spider.queue.DefaultQueue
 import com.mm.spider.queue.Queue
 import com.mm.spider.utils.VertxUtils
@@ -33,10 +32,6 @@ class Spider : com.mm.spider.component.AbstractSpider {
         }
     }
 
-    constructor(url: String) : this(){
-        this.addUrl(url, null)
-    }
-
     constructor(downloader: Downloader, pipelines: List<Pipeline>, queue: Queue) {
         this.downloader = downloader
         this.pipelines = pipelines
@@ -54,12 +49,9 @@ class Spider : com.mm.spider.component.AbstractSpider {
     }
 
     suspend fun doCrawl() {
-        if (this.queue?.getLeftRequests() == 0) {
-            this.spiderStatus = SPIDER_STATUS_IDEL
-        } else {
-            this.spiderStatus = SPIDER_STATUS_BUZYING
             val request = this.queue?.poll()
             if (request != null) {
+                this.spiderStatus = SPIDER_STATUS_BUZYING
                 if (this.openProxy) {
                     //get proxy
                 }
@@ -80,8 +72,9 @@ class Spider : com.mm.spider.component.AbstractSpider {
                     println("down load fail " + request.url)
                     e.printStackTrace()
                 }
+            } else {
+                this.spiderStatus = SPIDER_STATUS_IDEL
             }
-        }
     }
 
     //循环产生事件,推动爬虫的移动
@@ -126,7 +119,9 @@ class Spider : com.mm.spider.component.AbstractSpider {
     }
 
     override fun addRequest(request: Request): AbstractSpider {
-        queue?.push(request)
+        launch(VertxUtils.vertx.dispatcher()) {
+            queue?.push(request)
+        }
         return this
     }
 }

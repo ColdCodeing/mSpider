@@ -9,9 +9,9 @@ import java.util.*
 fun main(args: Array<String>) {
 
     SpiderEngine()
-            .addSpider(Spider("http://www.luoo.net/music").addPageProcessor(LuooMusicProcessor()).sleepTime(1))
-            .addSpider(Spider("http://www.luoo.net/music").addPageProcessor(LuooMusicProcessor()).sleepTime(1))
-            .addSpider(Spider("http://www.luoo.net/music").addPageProcessor(LuooMusicProcessor()).sleepTime(1))
-            .addSpider(Spider("http://www.luoo.net/music").addPageProcessor(LuooMusicProcessor()).sleepTime(1))
+            .addSpider(Spider().addPageProcessor(LuooMusicProcessor()).sleepTime(1).addUrl("http://www.luoo.net/music", null ))
+            .addSpider(Spider().addPageProcessor(LuooMusicProcessor()).sleepTime(1).addUrl("http://www.luoo.net/music", null ))
+            .addSpider(Spider().addPageProcessor(LuooMusicProcessor()).sleepTime(1).addUrl("http://www.luoo.net/music", null ))
+            .addSpider(Spider().addPageProcessor(LuooMusicProcessor()).sleepTime(1).addUrl("http://www.luoo.net/music", null ))
             .run()
 }

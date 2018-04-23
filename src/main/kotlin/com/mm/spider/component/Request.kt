@@ -3,19 +3,24 @@ package com.mm.spider.component
 import io.vertx.core.MultiMap
 import io.vertx.core.http.HttpMethod
 import io.vertx.core.net.ProxyOptions
+import io.vertx.kotlin.core.json.JsonObject
 
 class Request {
     lateinit var url: String
     var userAgent: String? = null
-    var httpMethod: HttpMethod
+    lateinit var httpMethod: HttpMethod
     var proxy: ProxyOptions? = null
-    var headers: MultiMap? = null
-    var cookies: MultiMap? = null
+    var headers: Map<String, String>? = null
+    var cookies: Map<String, String>? = null
     var body: Any? = null
     var contentType: String? = null
     var binaryContent = false
     var charset: String? = null
     var responseHeader: Boolean = true
+
+    constructor() {
+
+    }
 
     constructor(url: String, httpMethod: HttpMethod) {
         this.url = url

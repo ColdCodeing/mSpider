@@ -6,23 +6,23 @@ import com.mm.spider.queue.filter.Filter
 import com.mm.spider.queue.filter.HashDuplicateFilter
 import java.util.*
 
-class DefaultQueue() : Queue() {
+class DefaultQueue() : Queue {
 
-    override var queue: java.util.Queue<Request> = LinkedList()
-    override var filter: Filter = HashDuplicateFilter()
+    var queue: java.util.Queue<Request> = LinkedList()
+    var filter: Filter = HashDuplicateFilter()
 
     constructor(queue: java.util.Queue<Request>, filter: Filter) : this() {
         this.queue = queue
         this.filter = filter
     }
 
-    fun pushWhenNoDuplicate(request: Request) {
-        if (!this.filter.isDuplicate(request)) {
-            queue.offer(request)
+    override suspend fun push(request: Request) {
+        if(!filter.isDuplicate(request)) {
+            this.queue.offer(request)
         }
     }
 
-    override fun poll(): Request? {
+    override suspend fun poll(): Request? {
         return queue.poll()
     }
 
@@ -33,9 +33,4 @@ class DefaultQueue() : Queue() {
     override fun getTotalRequests(): Int {
         return this.filter.getTotalRequestsCount()
     }
-
-    override fun push(request: Request) {
-        pushWhenNoDuplicate(request)
-    }
-
 }
